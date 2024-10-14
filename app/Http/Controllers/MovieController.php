@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $movies = Movie::with('user')->get();
+        $movies = Movie::with('user')->orderBy('created_at', 'desc')->paginate(8);
         return MovieResource::collection($movies);
     }
 
@@ -39,7 +39,6 @@ class MovieController extends Controller
         $validatedData = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-
             if ($movie->thumbnail) {
                 Storage::disk('public')->delete($movie->thumbnail);
             }
